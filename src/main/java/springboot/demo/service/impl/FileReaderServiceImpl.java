@@ -14,16 +14,11 @@ public class FileReaderServiceImpl implements FileReaderService {
     @Override
     public List<String> getFileContent(String filePath) {
         Path path = Paths.get(filePath);
-        Stream<String> lines = null;
-        try {
-            lines = Files.lines(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> content = null;
-        if (lines != null) {
+        List<String> content;
+        try (Stream<String> lines = Files.lines(path)) {
             content = lines.collect(Collectors.toList());
-            lines.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read the file which path is : " + path, e);
         }
         return content;
     }
