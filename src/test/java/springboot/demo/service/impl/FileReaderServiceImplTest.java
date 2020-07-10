@@ -12,8 +12,7 @@ class FileReaderServiceImplTest {
 
     @Test
     public void getDataFromCsvOk() throws IOException {
-        dataFromCsv = fileReaderService.getDataFromCsv("C:\\Users\\PC\\IdeaProjects" +
-                "\\amazon\\src\\main\\resources\\test-reviews.csv");
+        dataFromCsv = fileReaderService.getDataFromCsv("src/main/resources/test-reviews.csv");
         Assert.assertEquals(3, dataFromCsv.size());
     }
 }

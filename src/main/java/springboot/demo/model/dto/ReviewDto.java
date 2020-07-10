@@ -1,11 +1,13 @@
 package springboot.demo.model.dto;
 
 import com.opencsv.bean.CsvBindByPosition;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReviewDto {
     @CsvBindByPosition(position = 1)
     private String productId;
@@ -25,18 +27,4 @@ public class ReviewDto {
     private String summary;
     @CsvBindByPosition(position = 9)
     private String text;
-
-    public ReviewDto(String productId, String userId, String profileName,
-                     String helpfulnessNumerator, String helpfulnessDenominator, String score,
-                     String time, String summary, String text) {
-        this.productId = productId;
-        this.userId = userId;
-        this.profileName = profileName;
-        this.helpfulnessNumerator = helpfulnessNumerator;
-        this.helpfulnessDenominator = helpfulnessDenominator;
-        this.score = score;
-        this.time = time;
-        this.summary = summary;
-        this.text = text;
-    }
 }

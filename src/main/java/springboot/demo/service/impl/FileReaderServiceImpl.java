@@ -24,7 +24,7 @@ public class FileReaderServiceImpl implements FileReaderService {
                     .build();
             return csvToBean.parse();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file" + e);
+            throw new RuntimeException("Can't read the file " + e);
         }
     }
 }

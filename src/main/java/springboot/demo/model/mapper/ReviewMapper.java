@@ -26,8 +26,11 @@ public class ReviewMapper {
         LocalDateTime time = getLocalDateTimeFromString(reviewDto.getTime());
         String summary = reviewDto.getSummary();
         String text = reviewDto.getText();
-        return new Review(productId, userId, profileName, helpfulnessNumerator,
-                helpfulnessDenominator, score, time, summary, text);
+        Review build = Review.builder().productId(productId).userId(userId)
+                .profileName(profileName).helpfulnessNumerator(helpfulnessNumerator)
+                .helpfulnessDenominator(helpfulnessDenominator)
+                .score(score).time(time).summary(summary).text(text).build();
+        return build;
     }
 
     LocalDateTime getLocalDateTimeFromString(String time) {
