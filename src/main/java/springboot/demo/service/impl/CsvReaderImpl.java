@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.supercsv.cellprocessor.Optional;
@@ -16,12 +17,27 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.ICsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
+import springboot.demo.model.Product;
 import springboot.demo.model.Review;
+import springboot.demo.model.User;
+import springboot.demo.model.dto.ReviewDto;
+import springboot.demo.model.mapper.ProductMapper;
+import springboot.demo.model.mapper.ReviewMapper;
+import springboot.demo.model.mapper.UserMapper;
 import springboot.demo.service.CsvReader;
 import springboot.demo.util.ParseMillisecondsToLocalDateTime;
 
 @Service
 public class CsvReaderImpl implements CsvReader {
+
+    @Autowired
+    private ProductMapper productMapper;
+
+    @Autowired
+    private ReviewMapper reviewMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public List<Review> getDataFromCsv(String fileName) {
@@ -37,9 +53,11 @@ public class CsvReaderImpl implements CsvReader {
                 .getAbsoluteFile()), CsvPreference.STANDARD_PREFERENCE)) {
             String[] headers = beanReader.getHeader(true);
             final CellProcessor[] processors = getProcessors();
-            Review review;
-            while ((review = beanReader.read(Review.class, headers, processors)) != null) {
-                reviews.add(review);
+            ReviewDto reviewDto;
+            while ((reviewDto = beanReader.read(ReviewDto.class, headers, processors)) != null) {
+                Product product = productMapper.getProductFromReviewDto(reviewDto);
+                User user = userMapper.getUserFromReviewDto(reviewDto);
+                reviews.add(reviewMapper.getFullReview(reviewDto, user, product));
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't parse the file. " + e);
