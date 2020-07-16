@@ -15,7 +15,7 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @GetMapping("/most-commented-products")
+    @GetMapping("/products/most-commented")
     public List<ProductDto> findMostCommentedProduct(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "1000") Integer limit) {

@@ -12,7 +12,7 @@ public class ReviewController {
     @Autowired
     private SortWords sortWords;
 
-    @GetMapping("/most-popular-words")
+    @GetMapping("/words/most-popular")
     private Map<String, Long> findMostPopularWords() {
         return sortWords.findMostPopularWords();
     }
