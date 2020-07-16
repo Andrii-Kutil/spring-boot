@@ -2,12 +2,12 @@ package springboot.demo.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import springboot.demo.model.Role;
 import springboot.demo.repository.RoleRepository;
 import springboot.demo.service.RoleService;
 
-@Component
+@Service
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
