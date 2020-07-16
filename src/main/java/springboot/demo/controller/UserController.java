@@ -13,7 +13,7 @@ import springboot.demo.service.UserService;
 @RestController
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @GetMapping("/most-active-users")
     public List<UserDto> findMostActiveUsers(
