@@ -18,6 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
+Reviews.csv
+*.db
 
 ### NetBeans ###
 /nbproject/private/
