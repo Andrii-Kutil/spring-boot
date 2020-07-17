@@ -1,27 +1,29 @@
 package springboot.demo.service.impl;
 
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springboot.demo.model.dto.WordDto;
+import springboot.demo.model.mapper.WordMapper;
 import springboot.demo.service.ReviewService;
 
 @Service
 public class SortWords {
 
     @Autowired
+    private WordMapper wordMapper;
+
+    @Autowired
     private ReviewService reviewService;
 
-    public Map<String, Long> findMostPopularWords() {
+    public List<WordDto> findMostPopularWords() {
         List<String> allTextFromReviews = reviewService.findAllText();
         Map<String, Long> map = fillMap(allTextFromReviews);
         Map<String, Long> sortedMap = sortByValues(map);
-        return trimmingMap(sortedMap);
-
+        return wordMapper.convertMapsToDto(sortedMap);
     }
 
     public Map<String, Long> fillMap(List<String> allTextFromReviews) {
@@ -54,17 +56,5 @@ public class SortWords {
                 new TreeMap<>(valueComparator);
         sortedByValues.putAll(map);
         return sortedByValues;
-    }
-
-    public Map<String, Long> trimmingMap(Map<String, Long> map) {
-        LinkedHashMap<String, Long> linkedHashMap = new LinkedHashMap<>();
-        Iterator<Map.Entry<String, Long>> itr = map.entrySet().iterator();
-        int i = 0;
-        while (itr.hasNext() && i < 1000) {
-            Map.Entry<String, Long> entry = itr.next();
-            linkedHashMap.put(entry.getKey(), entry.getValue());
-            i++;
-        }
-        return linkedHashMap;
     }
 }
