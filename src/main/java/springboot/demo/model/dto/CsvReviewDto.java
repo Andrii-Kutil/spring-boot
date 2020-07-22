@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewDto {
+public class CsvReviewDto {
     private Long id;
     private String productId;
     private String userId;

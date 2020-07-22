@@ -20,7 +20,7 @@ import org.supercsv.prefs.CsvPreference;
 import springboot.demo.model.Product;
 import springboot.demo.model.Review;
 import springboot.demo.model.User;
-import springboot.demo.model.dto.ReviewDto;
+import springboot.demo.model.dto.CsvReviewDto;
 import springboot.demo.model.mapper.ProductMapper;
 import springboot.demo.model.mapper.ReviewMapper;
 import springboot.demo.model.mapper.UserMapper;
@@ -53,11 +53,12 @@ public class CsvReaderImpl implements CsvReader {
                 .getAbsoluteFile()), CsvPreference.STANDARD_PREFERENCE)) {
             String[] headers = beanReader.getHeader(true);
             final CellProcessor[] processors = getProcessors();
-            ReviewDto reviewDto;
-            while ((reviewDto = beanReader.read(ReviewDto.class, headers, processors)) != null) {
-                Product product = productMapper.getProductFromReviewDto(reviewDto);
-                User user = userMapper.getUserFromReviewDto(reviewDto);
-                reviews.add(reviewMapper.getFullReview(reviewDto, user, product));
+            CsvReviewDto csvReviewDto;
+            while ((csvReviewDto = beanReader.read(CsvReviewDto.class,
+                    headers, processors)) != null) {
+                Product product = productMapper.getProductFromReviewDto(csvReviewDto);
+                User user = userMapper.getUserFromReviewDto(csvReviewDto);
+                reviews.add(reviewMapper.getFullReview(csvReviewDto, user, product));
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't parse the file. " + e);
