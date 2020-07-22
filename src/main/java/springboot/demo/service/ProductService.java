@@ -11,4 +11,6 @@ public interface ProductService {
     Iterable<Product> saveAll(List<Product> products);
 
     List<ProductDto> findMostCommentedProducts(Pageable pageable);
+
+    Product findById(String id);
 }

@@ -29,4 +29,10 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> findMostCommentedProducts(Pageable pageable) {
         return productRepository.findMostCommentedProducts(pageable).getContent();
     }
+
+    @Override
+    public Product findById(String id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found for this id:" + id));
+    }
 }
