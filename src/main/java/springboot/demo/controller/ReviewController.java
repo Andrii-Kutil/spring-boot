@@ -84,7 +84,7 @@ public class ReviewController {
             reviewService.setReviewInfoById(reviewDto);
             return new ResponseEntity<>("PATCH Response", HttpStatus.OK);
         } else {
-            throw new RuntimeException("Review isn`t belonged  you");
+            return new ResponseEntity<>("Review does not belong to you", HttpStatus.UNAUTHORIZED);
         }
     }
 
