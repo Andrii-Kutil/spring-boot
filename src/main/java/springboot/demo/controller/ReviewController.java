@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import springboot.demo.model.Review;
 import springboot.demo.model.User;
@@ -74,8 +73,7 @@ public class ReviewController {
     }
 
     @PatchMapping("/review/edit")
-    public @ResponseBody
-    ResponseEntity<String> editReview(@RequestBody ReviewEditDto reviewDto) {
+    public ResponseEntity<String> editReview(@RequestBody ReviewEditDto reviewDto) {
         Review review = reviewService.findById(reviewDto.getId());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
@@ -83,9 +81,8 @@ public class ReviewController {
         if (review.getUser().equals(loggedUser)) {
             reviewService.setReviewInfoById(reviewDto);
             return new ResponseEntity<>("PATCH Response", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Review does not belong to you", HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity<>("Review does not belong to you", HttpStatus.UNAUTHORIZED);
     }
 
     @DeleteMapping("/review/delete/{id}")
