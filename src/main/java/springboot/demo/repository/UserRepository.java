@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, String> {
             + " COUNT(r.user)) FROM User u JOIN Review r ON u.userId = r.user.userId GROUP BY "
             + "r.user.userId, r.user.profileName ORDER BY COUNT(r.user) DESC")
     Page<UserDto> findMostActiveUsers(Pageable pageable);
+
+    User findByEmail(String email);
 }

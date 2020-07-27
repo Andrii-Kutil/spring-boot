@@ -1,17 +1,19 @@
 package springboot.demo.service.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import springboot.demo.model.Product;
 import springboot.demo.model.Review;
 import springboot.demo.model.Role;
 import springboot.demo.model.User;
+import springboot.demo.repository.UserRepository;
 import springboot.demo.service.InjectDataService;
 import springboot.demo.service.ProductService;
 import springboot.demo.service.ReviewService;
-import springboot.demo.service.RoleService;
 import springboot.demo.service.UserService;
 
 @Service
@@ -21,18 +23,22 @@ public class InjectDataServiceImpl implements InjectDataService {
     private UserService userService;
 
     @Autowired
-    private RoleService roleService;
+    private ReviewService reviewService;
 
     @Autowired
-    private ReviewService reviewService;
+    private UserRepository userRepository;
 
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private BCryptPasswordEncoder cryptPasswordEncoder;
+
     @Override
     public void injectDataToBase(List<Review> reviews) {
+        injectUser();
+        injectAdmin();
         injectProductsToDataBase(reviews);
-        injectRolesToDataBase(createRoles());
         injectUsersToDataBase(reviews);
         injectReviewsToDataBase(reviews);
     }
@@ -55,17 +61,23 @@ public class InjectDataServiceImpl implements InjectDataService {
         return userService.saveAll(users);
     }
 
-    @Override
-    public Iterable<Role> injectRolesToDataBase(List<Role> roles) {
-        return roleService.saveAll(roles);
+    public User injectAdmin() {
+        User admin = User.builder()
+                .email("admin@admin.com")
+                .password(cryptPasswordEncoder.encode("1234"))
+                .profileName("admin")
+                .roles(Set.of(new Role("ROLE_ADMIN")))
+                .build();
+        return userRepository.save(admin);
     }
 
-    @Override
-    public List<Role> createRoles() {
-        Role userRole = new Role();
-        userRole.setName(Role.RoleName.valueOf("USER"));
-        Role adminRole = new Role();
-        adminRole.setName(Role.RoleName.valueOf("ADMIN"));
-        return List.of(userRole, adminRole);
+    public User injectUser() {
+        User user = User.builder()
+                .email("user@user.com")
+                .password(cryptPasswordEncoder.encode("1234"))
+                .profileName("user")
+                .roles(Set.of(new Role("ROLE_USER")))
+                .build();
+        return userRepository.save(user);
     }
 }
