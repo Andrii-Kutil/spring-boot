@@ -17,8 +17,8 @@ import springboot.demo.service.UserService;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String HEADER_STARTS = "Bearer ";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String HEADER_STARTS = "Bearer ";
 
     @Autowired
     private UserService userService;
@@ -39,9 +39,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Unable to get JWT Token");
+                throw new RuntimeException("Unable to get JWT Token ", e);
             } catch (ExpiredJwtException e) {
-                throw new RuntimeException("JWT Token has expired");
+                throw new RuntimeException("JWT Token has expired ", e);
             }
         } else {
             throw new RuntimeException("JWT Token does not begin with Bearer String");
