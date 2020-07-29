@@ -17,38 +17,38 @@ import springboot.demo.service.UserService;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String HEADER_STARTS = "Bearer ";
 
     @Autowired
     private UserService userService;
-    private final JwtToken jwtTokenUtil;
 
-    public JwtRequestFilter(JwtToken jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
+    @Autowired
+    private JwtToken jwtTokenUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        final String requestTokenHeader = request.getHeader("Authorization");
-        String username = null;
-        String jwtToken = null;
+        final String requestTokenHeader = request.getHeader(AUTHORIZATION_HEADER);
+        String username;
+        String jwtToken;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith(HEADER_STARTS)) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                logger.warn("Unable to get JWT Token");
+                throw new RuntimeException("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                logger.warn("JWT Token has expired");
+                throw new RuntimeException("JWT Token has expired");
             }
         } else {
-            logger.warn("JWT Token does not begin with Bearer String");
+            throw new RuntimeException("JWT Token does not begin with Bearer String");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.loadUserByUsername(username);
+            UserDetails userDetails = userService.loadUserByUsername(username);
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(
