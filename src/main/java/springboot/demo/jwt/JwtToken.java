@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtToken {
-    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000;//Time in milliseconds
+    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000; //Time in milliseconds
 
     @Value("${jwt.secret}")
     private String secret;
